@@ -1,4 +1,3 @@
-
 ############### STAGE 1: Build
 FROM node:12.18.2-alpine3.9 AS build
 WORKDIR /app

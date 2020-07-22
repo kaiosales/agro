@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+
+    agro-ui:
+        build: 
+            context: ./agro-ui
+            dockerfile: Dockerfile
+        ports:
+            - "3001:3001"
+    agro-proxy:
+        build: 
+            context: ./agro-proxy
+            dockerfile: Dockerfile
+        ports:
+            - "8080:80"
+        links: 
+            - "agro-ui"
