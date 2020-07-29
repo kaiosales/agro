@@ -1,0 +1,34 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "Volumes": [
+    ],
+    "containerDefinitions": [
+        {
+            "name": "agro-ui",
+            "image": "734806071026.dkr.ecr.sa-east-1.amazonaws.com/agro-ui:latest",
+            "essential": true,
+            "memory": 128,
+            "portMappings": [
+                {
+                  "hostPort": 3001,
+                  "containerPort": 3001
+                }
+            ]
+        },
+        {
+            "name": "agro-proxy",
+            "image": "734806071026.dkr.ecr.sa-east-1.amazonaws.com/agro-proxy:latest",
+            "essential": true,
+            "memory": 128,
+            "portMappings": [
+                {
+                  "hostPort": 80,
+                  "containerPort": 80
+                }
+            ],
+            "links": [
+                "agro-ui"
+            ]
+        }
+    ]
+}
