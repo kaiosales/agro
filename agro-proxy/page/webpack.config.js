@@ -3,12 +3,16 @@ const path = require('path');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackSkipAssetsPlugin = require('html-webpack-skip-assets-plugin').HtmlWebpackSkipAssetsPlugin;
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
+
 
 // This is the main configuration object.
 // Here you write different options and tell Webpack what to do
 module.exports = (env, argv) => {
     process.env.NODE_ENV = argv.mode;
+    const isProd = argv.mode === 'production';
 
     return {
         // Path to your entry point. From this file Webpack will begin his work
@@ -37,7 +41,7 @@ module.exports = (env, argv) => {
                             loader: MiniCssExtractPlugin.loader,
                             options: {
                                 // only enable hot in development
-                                hmr: argv.mode === 'development',
+                                hmr: !isProd,
                                 // if hmr does not work, this is a forceful method.
                                 reloadAll: true,
                               }
@@ -71,23 +75,23 @@ module.exports = (env, argv) => {
                 'NODE_ENV': argv.mode
             }),
             new MiniCssExtractPlugin({
-                filename: "bundle.css"
+                filename: 'bundle.css'
             }),
             new HtmlWebpackPlugin({
-                chunks: [],
-                template: "src/index.html",
+                cache: isProd,
+                template: path.join(__dirname, 'src', 'index.html'),
                 'title': 'Agro',
-                //'favicon': 'favicon.ico',
                 'meta': {
                     'viewport': 'width=device-width, initial-scale=1, shrink-to-fit=no',
                     'theme-color': '#4CAF50',
                 }
+            }),
+            new HtmlWebpackSkipAssetsPlugin({
+                skipAssets: [/\.js/]
+            }),
+            new FaviconsWebpackPlugin({
+                logo: path.join(__dirname, 'src', 'logo.png'),
             })
-            // ,new EventHooksPlugin({
-            //     'done': () => {
-            //         // delete unwanted assets 
-            //     }
-            // })
         ],
         optimization: {
             minimizer: [new OptimizeCSSAssetsPlugin({
